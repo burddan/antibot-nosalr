@@ -1,0 +1,11 @@
+name: AntibotNosalr
+version: 0.1.0
+main: com.nosalr.antibot.AntibotNosalr
+api-version: '1.21'
+description: Registra amostras do comportamento observavel dos jogadores.
+author: nosalr
+
+commands:
+  amostra:
+    description: Mostra uma amostra do seu estado observavel agora.
+    usage: /amostra

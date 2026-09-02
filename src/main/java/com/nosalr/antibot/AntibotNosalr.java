@@ -15,6 +15,7 @@ public class AntibotNosalr extends JavaPlugin {
     @Override
     public void onEnable() {
         getCommand("amostra").setExecutor(new ComandoAmostra());
+        getCommand("eventos").setExecutor(new ComandoEventos(registroDeEventos));
 
         getServer().getPluginManager().registerEvents(new OuvinteDeAcoes(registroDeEventos), this);
 

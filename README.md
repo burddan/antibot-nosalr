@@ -56,7 +56,7 @@ Todo evento tem os mesmos campos basicos, nao importa o tipo:
 | ------------------- | -------------------------- | ----------------------------------- |
 | `quebra_bloco`      | `BlockBreakEvent`          | bloco                               |
 | `coloca_bloco`      | `BlockPlaceEvent`          | bloco                               |
-| `interage_bloco`    | `PlayerInteractEvent`      | bloco, acao, mao                    |
+| `interage_bloco`    | `PlayerInteractEvent`      | bloco, acao, mao, item              |
 | `usa_item`          | `PlayerInteractEvent`      | item, mao                           |
 | `interage_entidade` | `PlayerInteractEntityEvent`| entidade, mao                       |
 | `ataque`            | `EntityDamageByEntityEvent`| alvo, dano, causa                   |
@@ -69,6 +69,22 @@ Todo evento tem os mesmos campos basicos, nao importa o tipo:
 
 So entrou na lista acao que tem evento proprio na API do Paper 1.21.11 e que
 foi conferida compilando contra o `paper-api` dessa versao.
+
+Detalhe de como a API se comporta: `usa_item` so acontece quando o jogador
+usa o item apontando pro ar. Se ele estiver apontando pra um bloco, o
+servidor manda a interacao com o bloco, e aquilo entra como
+`interage_bloco` com o campo `item` dizendo o que estava na mao.
+
+### Uma acao pode gerar mais de um evento
+
+Isso vem da API e quem for analisar precisa saber, pra nao contar a mesma
+coisa duas vezes. Colocar um bloco, por exemplo, gera dois eventos:
+
+    interage_bloco (-14, 60, 1) bloco=STONE acao=RIGHT_CLICK_BLOCK item=DIRT
+    coloca_bloco   (-14, 61, 1) bloco=DIRT
+
+O primeiro e o jogador clicando no bloco de apoio, o segundo e o bloco
+novo aparecendo. Comer tambem gera `usa_item` e depois `consome_item`.
 
 ### Acrescentar um tipo novo
 
@@ -123,3 +139,29 @@ O deslocamento e a velocidade precisam de uma amostra anterior pra serem
 calculados, entao na primeira vez que o jogador usa o comando eles vem zero.
 
 As amostras ficam so na memoria por enquanto.
+
+### Comando /eventos
+
+Lista os ultimos eventos observados de um jogador. Funciona no chat e no
+console do servidor.
+
+    /eventos                       os seus proprios eventos (dentro do jogo)
+    /eventos <jogador>             os eventos daquele jogador
+    /eventos <jogador> <quantos>   muda quantos aparecem (padrao 10, teto 50)
+
+Precisa da permissao `antibot.eventos`, que por padrao e so de operador,
+porque o comando mostra os eventos de qualquer jogador.
+
+Funciona tambem com jogador que ja saiu, enquanto os eventos dele ainda
+estiverem guardados na memoria. E justamente quando o administrador vai
+querer olhar.
+
+Como fica:
+
+    --- eventos de TesteBot (mostrando 6 de 16) ---
+    [23:22:01] ataque (-14, 61, 1) alvo=PIG dano=1.00 causa=ENTITY_ATTACK
+    [23:22:05] sai_servidor (-16, 60, 1)
+    [23:22:51] entra_servidor (-15, 60, 1)
+    [23:23:02] interage_bloco (-14, 60, 1) bloco=STONE acao=RIGHT_CLICK_BLOCK mao=principal item=DIRT
+    [23:23:02] coloca_bloco (-14, 61, 1) bloco=DIRT
+    [23:23:05] interage_entidade (-15, 60, 2) entidade=PIG mao=principal

@@ -9,3 +9,12 @@ commands:
   amostra:
     description: Mostra uma amostra do seu estado observavel agora.
     usage: /amostra
+  eventos:
+    description: Lista os ultimos eventos observados de um jogador.
+    usage: /eventos <jogador> [quantos]
+    permission: antibot.eventos
+
+permissions:
+  antibot.eventos:
+    description: Permite ver os eventos observados dos jogadores.
+    default: op

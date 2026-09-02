@@ -86,6 +86,12 @@ public class OuvinteDeAcoes implements Listener {
             registrado.anotar("acao", acao.name());
             registrado.anotar("mao", nomeDaMao(evento.getHand()));
 
+            // se tinha item na mao, guarda qual era: usar item olhando pra um
+            // bloco cai aqui, e nao em usa_item
+            if (evento.getItem() != null) {
+                registrado.anotar("item", evento.getItem().getType().name());
+            }
+
             registro.guardar(registrado);
             return;
         }
